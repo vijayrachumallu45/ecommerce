@@ -20,7 +20,7 @@ const Navbar = () => {
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">
           <ShoppingBag className="logo-icon" />
-          <span>ShopEase</span>
+          <span>Shopease</span>
         </Link>
 
         {/* Desktop Menu */}

@@ -11,9 +11,6 @@ const ProductCard = ({ product }) => {
       <div className="product-image-container">
         <img src={product.image} alt={product.name} className="product-image" />
         <span className="product-category-badge">{product.category}</span>
-        {product.discountPercent > 0 && (
-          <span className="product-discount-badge">-{product.discountPercent}% OFF</span>
-        )}
       </div>
 
       <div className="product-info">
