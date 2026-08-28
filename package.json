@@ -1,0 +1,24 @@
+{
+  "name": "shopease-ecommerce",
+  "version": "1.0.0",
+  "description": "Complete ShopEase Full-Stack MERN E-Commerce Application",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "test": "npm test --prefix backend && npm test --prefix frontend",
+    "seed": "node backend/seeder.js"
+  },
+  "keywords": [
+    "mern",
+    "ecommerce",
+    "react",
+    "express",
+    "mongodb",
+    "nodejs"
+  ],
+  "author": "ShopEase Team",
+  "license": "UNLICENSED"
+}
