@@ -2,12 +2,32 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import API from '../services/api';
 import Loading from '../components/Loading';
-import { Users, Package, ShoppingCart, DollarSign, PlusCircle, ArrowRight } from 'lucide-react';
+import { Users, Package, ShoppingCart, DollarSign, PlusCircle, ArrowRight, Download } from 'lucide-react';
 
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const exportCSVReport = () => {
+    if (!stats || !stats.recentOrders) return;
+    const headers = ['Order ID', 'Customer', 'Total Amount', 'Status', 'Date'];
+    const rows = stats.recentOrders.map(o => [
+      o._id,
+      o.user?.name || 'Guest',
+      o.totalAmount,
+      o.status,
+      new Date(o.createdAt).toLocaleDateString()
+    ]);
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `shopease_sales_report_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   useEffect(() => {
     const fetchAdminStats = async () => {
@@ -35,6 +55,9 @@ const Dashboard = () => {
           <p>Overview of ShopEase performance and recent activity</p>
         </div>
         <div className="admin-quick-actions">
+          <button onClick={exportCSVReport} className="btn btn-outline" style={{ marginRight: '10px' }}>
+            <Download size={18} /> Export CSV Report
+          </button>
           <Link to="/admin/products/add" className="btn btn-primary">
             <PlusCircle size={18} /> Add New Product
           </Link>
