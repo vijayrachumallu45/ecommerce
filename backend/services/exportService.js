@@ -2503,5 +2503,21 @@ class ExportService {
     return result;
   }
 
+  convertToCSV(items = [], fields = []) {
+    if (!Array.isArray(items) || items.length === 0) return '';
+    const headers = fields.length > 0 ? fields : Object.keys(items[0]);
+    const csvRows = [];
+    csvRows.push(headers.join(','));
+    for (const item of items) {
+      const values = headers.map(header => {
+        const val = item[header] !== undefined && item[header] !== null ? item[header] : '';
+        const escaped = String(val).replace(/"/g, '""');
+        return `"${escaped}"`;
+      });
+      csvRows.push(values.join(','));
+    }
+    return csvRows.join('\n');
+  }
+
 }
 module.exports = new ExportService();
