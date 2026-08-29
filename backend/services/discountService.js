@@ -1504,5 +1504,49 @@ class DiscountService {
     };
   }
 
+  applyCouponCode(code, subtotal = 0) {
+    if (!code || typeof code !== 'string') {
+      return { valid: false, discountAmount: 0, finalSubtotal: subtotal, message: 'Invalid coupon code format' };
+    }
+    const cleanCode = code.trim().toUpperCase();
+    let discountAmount = 0;
+    let valid = false;
+    let message = 'Coupon applied successfully';
+
+    if (cleanCode === 'WELCOME10') {
+      if (subtotal >= 20) {
+        discountAmount = Number((subtotal * 0.10).toFixed(2));
+        valid = true;
+      } else {
+        message = 'WELCOME10 requires a minimum order subtotal of $20';
+      }
+    } else if (cleanCode === 'SUMMER20') {
+      if (subtotal >= 50) {
+        discountAmount = Number((subtotal * 0.20).toFixed(2));
+        valid = true;
+      } else {
+        message = 'SUMMER20 requires a minimum order subtotal of $50';
+      }
+    } else if (cleanCode === 'SAVE50') {
+      if (subtotal >= 200) {
+        discountAmount = 50;
+        valid = true;
+      } else {
+        message = 'SAVE50 requires a minimum order subtotal of $200';
+      }
+    } else {
+      message = `Coupon code '${cleanCode}' is not recognized or expired`;
+    }
+
+    const finalSubtotal = Number(Math.max(0, subtotal - discountAmount).toFixed(2));
+    return {
+      valid,
+      code: cleanCode,
+      discountAmount,
+      finalSubtotal,
+      message
+    };
+  }
+
 }
 module.exports = new DiscountService();
