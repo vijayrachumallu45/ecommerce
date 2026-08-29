@@ -1,14 +1,24 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { CartContext } from '../context/CartContext';
-import { ShoppingBag, User, LogOut, Menu, X, Shield, Package } from 'lucide-react';
+import { ShoppingBag, User, LogOut, Menu, X, Shield, Package, Sun, Moon } from 'lucide-react';
 
 const Navbar = () => {
   const { user, logout, isAdmin } = useContext(AuthContext);
   const { cartCount } = useContext(CartContext);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [theme, setTheme] = useState(() => localStorage.getItem('shopease_theme') || 'light');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.body.setAttribute('data-theme', theme);
+    localStorage.setItem('shopease_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
+  };
 
   const handleLogout = () => {
     logout();
@@ -37,6 +47,15 @@ const Navbar = () => {
         </div>
 
         <div className="navbar-actions">
+          <button 
+            onClick={toggleTheme} 
+            className="theme-toggle-btn" 
+            title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+            aria-label="Toggle Theme"
+          >
+            {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+          </button>
+
           <Link to="/cart" className="cart-badge-btn" title="View Cart">
             <ShoppingBag size={22} />
             {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
