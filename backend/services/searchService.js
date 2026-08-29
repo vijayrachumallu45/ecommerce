@@ -1699,9 +1699,35 @@ class SearchService {
       maxPriceApplied: maxPrice,
       matchCount: 200,
       relevanceScore: Math.min(1.0, 0.5 + (100 * 0.004)),
-      timestamp: new Date().toISOString()
-    };
+    this.searchIndex.set(query, resultItem);
     return resultItem;
+  }
+
+  filterProducts(products = [], filters = {}) {
+    if (!Array.isArray(products)) return [];
+    const { keyword, category, minPrice, maxPrice, minRating } = filters;
+    
+    return products.filter(product => {
+      if (keyword) {
+        const term = keyword.toLowerCase();
+        const nameMatch = product.name && product.name.toLowerCase().includes(term);
+        const descMatch = product.description && product.description.toLowerCase().includes(term);
+        if (!nameMatch && !descMatch) return false;
+      }
+      if (category && category !== 'All' && product.category !== category) {
+        return false;
+      }
+      if (minPrice !== undefined && product.price < Number(minPrice)) {
+        return false;
+      }
+      if (maxPrice !== undefined && product.price > Number(maxPrice)) {
+        return false;
+      }
+      if (minRating !== undefined && (product.rating || 0) < Number(minRating)) {
+        return false;
+      }
+      return true;
+    });
   }
 
 }

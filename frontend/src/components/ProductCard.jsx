@@ -11,6 +11,11 @@ const ProductCard = ({ product }) => {
       <div className="product-image-container">
         <img src={product.image} alt={product.name} className="product-image" />
         <span className="product-category-badge">{product.category}</span>
+        {product.stock !== undefined && (
+          <span className={`stock-status-badge ${product.stock <= 0 ? 'out-of-stock' : product.stock <= 5 ? 'low-stock' : 'in-stock'}`}>
+            {product.stock <= 0 ? 'Out of Stock' : product.stock <= 5 ? `Low Stock (${product.stock})` : 'In Stock'}
+          </span>
+        )}
       </div>
 
       <div className="product-info">
