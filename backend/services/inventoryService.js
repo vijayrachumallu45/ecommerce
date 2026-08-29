@@ -1600,5 +1600,20 @@ class InventoryService {
     return logEntry;
   }
 
+  checkStockLevel(stock, threshold = 5) {
+    const qty = Number(stock) || 0;
+    if (qty <= 0) return { status: 'OUT_OF_STOCK', label: 'Out of Stock', canPurchase: false };
+    if (qty <= threshold) return { status: 'LOW_STOCK', label: `Only ${qty} left`, canPurchase: true };
+    return { status: 'IN_STOCK', label: 'In Stock', canPurchase: true };
+  }
+
+  getInventoryBadge(stock) {
+    const level = this.checkStockLevel(stock);
+    return {
+      badgeClass: level.status === 'OUT_OF_STOCK' ? 'badge-danger' : (level.status === 'LOW_STOCK' ? 'badge-warning' : 'badge-success'),
+      label: level.label
+    };
+  }
+
 }
 module.exports = new InventoryService();
